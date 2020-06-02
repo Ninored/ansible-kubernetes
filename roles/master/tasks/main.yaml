@@ -1,0 +1,31 @@
+---
+
+- name: Get k3s installation script
+  get_url: 
+    url: https://get.k3s.io 
+    dest: /tmp/k3s-install.sh
+    mode: 0755
+
+- name: Execute installation
+  shell: /tmp/k3s-install.sh
+  environment:
+    INSTALL_K3S_EXEC: server --disable traefik
+
+- name: Wait node token
+  wait_for:
+    path: /var/lib/rancher/k3s/server/node-token
+
+- name: Slurp node token
+  slurp:
+    src: /var/lib/rancher/k3s/server/node-token
+  register: node_token
+
+- name: Store Master node-token
+  set_fact:
+    token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+
+- name: Copy kubectl config
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ./k3s-config
+    flat: true

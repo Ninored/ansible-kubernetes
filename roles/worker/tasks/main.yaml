@@ -1,0 +1,13 @@
+---
+- name: Get k3s installation script
+  get_url: 
+    url: https://get.k3s.io 
+    dest: /tmp/k3s-install.sh
+    mode: 0755
+
+- name: Execute installation
+  shell: /tmp/k3s-install.sh
+  environment:
+    K3S_URL: "https://{{ groups['master'][0] }}:6443"
+    K3S_TOKEN: "{{ hostvars[groups['master'][0]]['token'] }}"
+
