@@ -10,3 +10,5 @@ ansible-playbook ./site.yml
 
 This script will install Kubernetes without Traefik.
 And copy the Kubernetes configuration file as `./k3s-config`
+
+This project is references in this article: [Here](https://blog.ninored.ovh/articles/deploy-kubernetes-at-home-with-ansible)
